@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button click,setting,restart,exit;
     private String anwser;
     private int number;
+    private int allTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         textArea.setText("");
         userinput.setText("");
         anwser =createAnwser(number);
+        allTimes=0;
     }
     private void initGame(){
         onStart();
@@ -73,22 +75,45 @@ public class MainActivity extends AppCompatActivity {
     public void doguess() {
         Log.v("test","OK");
         String foo =userinput.getText().toString();
-        if(foo.length()==number&&foo.matches("[0-9]+")) {
-            userinput.setText("");
-            String ab = checkAB(anwser, foo);
-            if (ab.equals(number + "A0B")) {
-                showDialog();
-            } else {
-                textArea.append("答案" + anwser + " 輸入: " + foo + " AB:" + ab + '\n');
+        if(allTimes>=10){
+            showEnd();
+        }else if(foo.length()==number&&foo.matches("[0-9]+")&&checkNumber(foo)) {
+                userinput.setText("");
+                String ab = checkAB(anwser, foo);
+                if (ab.equals(number + "A0B")) {
+                    showDialog();
+                } else {
+                    allTimes++;
+                    textArea.append(" 輸入: " + foo + " AB:" + ab + '\n');
+                }
+            }else {
+                showError();
             }
-
-        }else {
-            showError();
-        }
     }
+
+    private void showEnd() {
+        AlertDialog.Builder bulider = new AlertDialog.Builder(this);
+        bulider.setTitle("失敗");
+        bulider.setCancelable(false);
+        bulider.setMessage("正確答案"+anwser);
+        bulider.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                    initGame();
+            }
+        });
+        bulider.create().show();
+    }
+
     public void end(View view) {
         finish();
     }
+    private boolean checkNumber(String foo){
+        for(int i=0;i<foo.length();i++){
+            if(foo.charAt(i%foo.length())==foo.charAt((i+1)%foo.length()))return false;
+        }
+        return true;
+    };
     private void showSetting(){
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
         builder.setMessage("請輸入3~9");
@@ -112,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private  void showError(){
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
-        builder.setMessage("請輸入數字"+number+"碼");
+        builder.setMessage("請輸入不重複的數字"+number+"碼");
         builder.setTitle("輸入錯誤");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -122,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         });
         AlertDialog alertdialog =builder.create();
         alertdialog.show();
+        alertdialog.setCancelable(false);
     }
     private void showDialog(){
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
