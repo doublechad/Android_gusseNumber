@@ -108,9 +108,13 @@ public class MainActivity extends AppCompatActivity {
     public void end(View view) {
         finish();
     }
+
     private boolean checkNumber(String foo){
         for(int i=0;i<foo.length();i++){
-            if(foo.charAt(i%foo.length())==foo.charAt((i+1)%foo.length()))return false;
+            for(int z=0;z<foo.length();z++) {
+                if (foo.charAt(i % foo.length()) == foo.charAt((i + z) % foo.length()))
+                    return false;
+            }
         }
         return true;
     };
