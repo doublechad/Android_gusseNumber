@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean checkNumber(String foo){
         for(int i=0;i<foo.length();i++){
-            for(int z=0;z<foo.length();z++) {
+            for(int z=i+1;z<foo.length();z++) {
                 if (foo.charAt(i % foo.length()) == foo.charAt((i + z) % foo.length()))
                     return false;
             }
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String bar =foo.getText().toString();
-                if(bar.matches("[0-9]")&&bar.length()==1) {
+                if(bar.matches("[2-9]")&&bar.length()==1) {
                     number = Integer.parseInt(bar);
                     initGame();
                 }else{
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.v("test","OK");
+                initGame();
             }
         });
         AlertDialog alertdialog =builder.create();
